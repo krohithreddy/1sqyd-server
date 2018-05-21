@@ -4,31 +4,86 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 
+exports.user_get_all = (req, res, next) => {
+  User.find()
+    // .select("name price _id productImage")
+    .exec()
+    .then(docs => {
+      // const response = {
+      //   count: docs.length,
+      //   products: docs.map(doc => {
+      //     return {
+      //       name: doc.name,
+      //       price: doc.price,
+      //       productImage: doc.productImage,
+      //       _id: doc._id,
+      //     };
+      //   })
+      // };
+      //   if (docs.length >= 0) {
+      res.status(200).json(docs);
+      //   } else {
+      //       res.status(404).json({
+      //           message: 'No entries found'
+      //       });
+      //   }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+};
+
 exports.user_signup = (req, res, next) => {
-  User.find({ email: req.body.email })
+  User.find({ Email: req.body.Email })
     .exec()
     .then(user => {
       if (user.length >= 1) {
-        return res.status(409).json({
+        console.log(user);
+        const token = jwt.sign(
+          {
+            email: user[0].Email,
+            userId: user[0]._id
+          },
+          process.env.JWT_KEY,
+          {
+            expiresIn: "1h"
+          }
+        );
+        return res.status(200).json({
+          token: token,
+          ServerId: user[0]._id,
           message: "Mail exists"
         });
-      } else {
-        bcrypt.hash(req.body.password, 10, (err, hash) => {
-          if (err) {
-            return res.status(500).json({
-              error: err
-            });
-          } else {
+      }
+       else {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
-              email: req.body.email,
-              password: hash
+              Email: req.body.Email,
+              GivenName: req.body.GivenName,
+              FamilyName: req.body.FamilyName,
+              DisplayName: req.body.DisplayName,
+              Url: req.body.Url
             });
             user
               .save()
               .then(result => {
+                const token = jwt.sign(
+                  {
+                    email: result.Email,
+                    userId: result._id
+                  },
+                  process.env.JWT_KEY,
+                  {
+                    expiresIn: "1h"
+                  }
+                );
                 console.log(result);
-                res.status(201).json({
+              return  res.status(201).json({
+                  token: token,
+                  ServerId: result._id,
                   message: "User created"
                 });
               })
@@ -39,30 +94,22 @@ exports.user_signup = (req, res, next) => {
                 });
               });
           }
-        });
-      }
     });
 };
 
 exports.user_login = (req, res, next) => {
-  User.find({ email: req.body.email })
+  User.find({ Email: req.body.Email })
     .exec()
     .then(user => {
       if (user.length < 1) {
         return res.status(401).json({
-          message: "Auth failed"
+          message: "Auth failed1"
         });
       }
-      bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-        if (err) {
-          return res.status(401).json({
-            message: "Auth failed"
-          });
-        }
-        if (result) {
+        else {
           const token = jwt.sign(
             {
-              email: user[0].email,
+              email: user[0].Email,
               userId: user[0]._id
             },
             process.env.JWT_KEY,
@@ -75,10 +122,7 @@ exports.user_login = (req, res, next) => {
             token: token
           });
         }
-        res.status(401).json({
-          message: "Auth failed"
-        });
-      });
+
     })
     .catch(err => {
       console.log(err);
