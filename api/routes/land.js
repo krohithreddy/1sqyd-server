@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require('multer');
 const checkAuth = require('../middleware/check-auth');
-const ProductsController = require('../controllers/products');
+const LandsController = require('../controllers/lands');
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -30,14 +30,7 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-router.get("/", ProductsController.products_get_all);
 
-router.post("/", checkAuth, upload.array('productImage',"2"), ProductsController.products_create_product);
-
-router.get("/:productId", ProductsController.products_get_product);
-
-router.patch("/:productId", checkAuth, ProductsController.products_update_product);
-
-router.delete("/:productId", checkAuth, ProductsController.products_delete);
+router.post("/", checkAuth, upload.any(), LandsController.Lands_create_newland);
 
 module.exports = router;

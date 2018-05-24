@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const productRoutes = require("./api/routes/products");
 const orderRoutes = require("./api/routes/orders");
 const userRoutes = require('./api/routes/user');
+const landRoutes = require("./api/routes/land");
 // mongoose.connect(
 //   "mongodb+srv://rohith:" +
 //     process.env.MONGO_ATLAS_PW +
@@ -35,11 +36,13 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/uploads', express.static('uploads'));
 
 // Routes which should handle requests
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 app.use("/user", userRoutes);
+app.use("/land", landRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
