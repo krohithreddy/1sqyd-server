@@ -73,7 +73,7 @@ exports.user_signup = (req, res, next) => {
                 const token = jwt.sign(
                   {
                     email: result.Email,
-                    userId: result._id
+                  //  userId: result._id
                   },
                   process.env.JWT_KEY,
                   {
@@ -110,7 +110,7 @@ exports.user_login = (req, res, next) => {
           const token = jwt.sign(
             {
               email: user[0].Email,
-              userId: user[0]._id
+          //    userId: user[0]._id
             },
             process.env.JWT_KEY,
             {

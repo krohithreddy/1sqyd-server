@@ -2,7 +2,30 @@ const mongoose = require("mongoose");
 const Land = require("../models/land");
 const User = require("../models/user");
 
-
+exports.Lands_get_all = (req, res, next) => {
+  Land.find()
+    .select("Email Aadhar LandImage SurveyImage")
+    .exec()
+    .then(docs => {
+      res.status(200).json({
+        count: docs.length,
+        lands: docs.map(doc => {
+          return {
+            Email: doc.Email,
+             Aadhar: doc.Aadhar,
+             LandImage: doc.LandImage,
+              SurveyImage: doc.SurveyImage,
+          };
+        })
+      }
+    );
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+};
 
 exports.Lands_create_newland = (req, res, next) => {
   User.find({ Email: req.body.Email })
@@ -19,10 +42,13 @@ exports.Lands_create_newland = (req, res, next) => {
               if(File.fieldname == "LandImage"){
                 LandImage = File.path;
               }
-              else if(File.fieldname == "SurveyImage"){
+               else if(File.fieldname == "SurveyImage"){
                 SurveyImage = File.path;
               }
             });
+            // if(SurveyImage==null){
+            //   SurveyImage = "not available";
+            // }
             const land = new Land({
               _id: new mongoose.Types.ObjectId(),
               Email: req.body.Email,
@@ -51,6 +77,12 @@ exports.Lands_create_newland = (req, res, next) => {
                   }
                 });
               })
+              .catch(err => {
+                  console.log(err);
+                  res.status(500).json({
+                    error: err
+                  });
+                });
        }
             })
               .catch(err => {
