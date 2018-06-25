@@ -4,20 +4,21 @@ const User = require("../models/user");
 
 exports.Lands_get_all = (req, res, next) => {
   Land.find()
-    .select("Email Aadhar LandImage SurveyImage")
+    // .select("Email Aadhar LandImage SurveyImage")
     .exec()
     .then(docs => {
-      res.status(200).json({
-        count: docs.length,
-        lands: docs.map(doc => {
-          return {
-            Email: doc.Email,
-             Aadhar: doc.Aadhar,
-             LandImage: doc.LandImage,
-              SurveyImage: doc.SurveyImage,
-          };
-        })
-      }
+      res.status(200).json(docs
+      //   {
+      //   count: docs.length,
+      //   lands: docs.map(doc => {
+      //     return {
+      //       Email: doc.Email,
+      //        Aadhar: doc.Aadhar,
+      //        LandImage: doc.LandImage,
+      //         SurveyImage: doc.SurveyImage,
+      //     };
+      //   })
+      // }
     );
     })
     .catch(err => {
@@ -52,8 +53,13 @@ exports.Lands_create_newland = (req, res, next) => {
             const land = new Land({
               _id: new mongoose.Types.ObjectId(),
               Email: req.body.Email,
-              Aadhar: req.body.Aadhar,
+              Phone_number: req.body.Phone_number,
+              Owner_name: req.body.Owner_name,
+              Total_units: req.body.Total_units,
+              Land_value: req.body.Land_value,
+              Available_units: req.body.Total_units,
               LandImage: LandImage,
+
               SurveyImage:SurveyImage
             //  SurveyImage: req.files[0].path
             });

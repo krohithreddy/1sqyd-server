@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const Order = require("../models/order");
-const Product = require("../models/product");
+const Land = require("../models/land");
 
 exports.orders_get_all = (req, res, next) => {
   Order.find()
@@ -32,33 +32,40 @@ exports.orders_get_all = (req, res, next) => {
 };
 
 exports.orders_create_order = (req, res, next) => {
-  Product.findById(req.body.productId)
-    .then(product => {
-      if (!product) {
+  Land.findById(req.body.LandId)
+    .then(land => {
+      if (!land) {
         return res.status(404).json({
-          message: "Product not found"
+          message: "land not found"
         });
       }
-      const order = new Order({
-        _id: mongoose.Types.ObjectId(),
-        quantity: req.body.quantity,
-        product: req.body.productId
-      });
-      return order.save();
+      else if ((land.Available_units-req.body.Quantity)<0) {
+        return res.status(404).json({
+          message: "land units out of bound"
+        });
+      }
+      land.update({Available_units: land.Available_units-req.body.Quantity});
+      console.log(land.Available_units);
+      // const order = new Order({
+      //   _id: mongoose.Types.ObjectId(),
+      //   Quantity: req.body.Quantity,
+      //   product: req.body.LandId
+      // });
+      // return order.save();
     })
     .then(result => {
       console.log(result);
       res.status(201).json({
-        message: "Order stored",
-        createdOrder: {
-          _id: result._id,
-          product: result.product,
-          quantity: result.quantity
-        },
-        request: {
-          type: "GET",
-          url: "http://localhost:3000/orders/" + result._id
-        }
+        // message: "Order stored",
+        // createdOrder: {
+        //   _id: result._id,
+        //   product: result.product,
+        //   quantity: result.Quantity
+        // },
+        // request: {
+        //   type: "GET",
+        //   url: "http://localhost:3000/orders/" + result._id
+        // }
       });
     })
     .catch(err => {
