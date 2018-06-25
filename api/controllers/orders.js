@@ -5,24 +5,26 @@ const Land = require("../models/land");
 
 exports.orders_get_all = (req, res, next) => {
   Order.find()
-    .select("product quantity _id")
-    .populate("product", "name")
+    // .select("product quantity _id")
+    // .populate("product", "name")
     .exec()
     .then(docs => {
-      res.status(200).json({
-        count: docs.length,
-        orders: docs.map(doc => {
-          return {
-            _id: doc._id,
-            product: doc.product,
-            quantity: doc.quantity,
-            request: {
-              type: "GET",
-              url: "http://localhost:3000/orders/" + doc._id
-            }
-          };
-        })
-      });
+      res.status(200).json(docs
+      //   {
+      //   count: docs.length,
+      //   orders: docs.map(doc => {
+      //     return {
+      //       _id: doc._id,
+      //       product: doc.product,
+      //       quantity: doc.quantity,
+      //       request: {
+      //         type: "GET",
+      //         url: "http://localhost:3000/orders/" + doc._id
+      //       }
+      //     };
+      //   })
+      // }
+    );
     })
     .catch(err => {
       res.status(500).json({
@@ -44,28 +46,38 @@ exports.orders_create_order = (req, res, next) => {
           message: "land units out of bound"
         });
       }
-      land.update({Available_units: land.Available_units-req.body.Quantity});
+      Land.update({_id:req.body.LandId},{$set:{Available_units: land.Available_units-req.body.Quantity}})
+      .exec()
+
+    //  land.update({Available_units: land.Available_units-req.body.Quantity});
       console.log(land.Available_units);
-      // const order = new Order({
-      //   _id: mongoose.Types.ObjectId(),
-      //   Quantity: req.body.Quantity,
-      //   product: req.body.LandId
-      // });
-      // return order.save();
+      const order = new Order({
+        _id: mongoose.Types.ObjectId(),
+        LandId: req.body.LandId,
+        Email: req.body.Email,
+        Owner_email:  req.body.Owner_email,
+        Available_units:  land.Available_units-req.body.Quantity,
+        Amount_paid:  req.body.Amount_paid,
+        Quantity: req.body.Quantity
+        });
+      return order.save();
     })
     .then(result => {
       console.log(result);
       res.status(201).json({
-        // message: "Order stored",
-        // createdOrder: {
-        //   _id: result._id,
-        //   product: result.product,
-        //   quantity: result.Quantity
-        // },
-        // request: {
-        //   type: "GET",
-        //   url: "http://localhost:3000/orders/" + result._id
-        // }
+        message: "Order stored",
+        createdOrder: {
+          _id: result._id,
+          Email: result.Email,
+          Amount_paid: result.Amount_paid,
+          Available_units: result.Available_units,
+          Quantity: result.Quantity,
+          Owner_email: result.Owner_email
+        },
+        request: {
+          type: "GET",
+          url: "http://localhost:3000/orders/" + result._id
+        }
       });
     })
     .catch(err => {
