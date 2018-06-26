@@ -58,8 +58,21 @@ exports.Lands_create_newland = (req, res, next) => {
               Total_units: req.body.Total_units,
               Land_value: req.body.Land_value,
               Available_units: req.body.Total_units,
+              Latitude: req.body.Latitude,
+              Longitude: req.body.Longitude,
+              State: req.body.State,
+              District: req.body.District,
+              Division: req.body.Division,
+              Mandal: req.body.Mandal,
+              Village: req.body.Village,
+              City: req.body.City,
+              Survey_number: req.body.Survey_number,
+              Total_size: req.body.Total_size,
+              width: req.body.width,
+              length: req.body.length,
+              Aadhar: req.body.Aadhar,
+              Land_status: false,
               LandImage: LandImage,
-
               SurveyImage:SurveyImage
             //  SurveyImage: req.files[0].path
             });

@@ -10,7 +10,7 @@ const landSchema = mongoose.Schema({
     Division: { type: String },
     Mandal: { type: String},
     Village: { type: String },
-    City: { type: String},
+    City: { type: String,required:true},
     Survey_number: { type: String },
     Total_size: { type: Number},
     width: { type: Number },
