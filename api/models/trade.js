@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const orderSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
+    OrderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: true },
     LandId: { type: mongoose.Schema.Types.ObjectId, ref: 'Land', required: true },
     Email: { type: String, required: true },
     Owner_email: { type: String, required: true },
-  //  Available_units: { type: Number, required: true },
     Quantity: { type: Number, required: true },
-    Land_unit_value: { type: Number, required: true },
     Cost_unit_value: { type: Number, required: true },
+    Land_unit_value: { type: Number, required: true },
     Total_size: { type: Number},
     Percent_sold: { type: Number, required: true },
     Total_units: { type: Number, required: true},
@@ -17,4 +17,4 @@ const orderSchema = mongoose.Schema({
     City: { type: String,required:true}
 });
 
-module.exports = mongoose.model('Order', orderSchema);
+module.exports = mongoose.model('Trade', orderSchema);

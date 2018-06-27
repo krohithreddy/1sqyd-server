@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Land = require("../models/land");
+const Buy = require("../models/buy");
 const User = require("../models/user");
 
 exports.Lands_get_all = (req, res, next) => {
@@ -38,7 +39,7 @@ exports.Lands_create_newland = (req, res, next) => {
         });
       }
        else {
-            var SurveyImage,LandImage;
+            var SurveyImage,LandImage,AaadharImage,PanImage;
             req.files.forEach(function(File){
               if(File.fieldname == "LandImage"){
                 LandImage = File.path;
@@ -46,18 +47,23 @@ exports.Lands_create_newland = (req, res, next) => {
                else if(File.fieldname == "SurveyImage"){
                 SurveyImage = File.path;
               }
+              else if(File.fieldname == "AaadharImage"){
+               AaadharImage = File.path;
+             }
+             else if(File.fieldname == "PanImage"){
+              PanImage = File.path;
+            }
             });
-            // if(SurveyImage==null){
-            //   SurveyImage = "not available";
-            // }
             const land = new Land({
               _id: new mongoose.Types.ObjectId(),
               Email: req.body.Email,
               Phone_number: req.body.Phone_number,
               Owner_name: req.body.Owner_name,
               Total_units: req.body.Total_units,
-              Land_value: req.body.Land_value,
               Available_units: req.body.Total_units,
+              Percent_sold: req.body.Percent_sold,
+              Land_unit_value: req.body.Land_unit_value,
+              Cost_unit_value: req.body.Cost_unit_value,
               Latitude: req.body.Latitude,
               Longitude: req.body.Longitude,
               State: req.body.State,
@@ -73,13 +79,39 @@ exports.Lands_create_newland = (req, res, next) => {
               Aadhar: req.body.Aadhar,
               Land_status: false,
               LandImage: LandImage,
+              AaadharImage: AaadharImage,
+              PanImage: PanImage,
               SurveyImage:SurveyImage
             //  SurveyImage: req.files[0].path
             });
             land
               .save()
               .then(result => {
-                console.log(result);
+                const buy = new Buy({
+                  _id: new mongoose.Types.ObjectId(),
+                  Email: req.body.Email,
+                  Owner_email: req.body.Email,
+                  LandId: result._id,
+                  Phone_number: req.body.Phone_number,
+                  Owner_name: req.body.Owner_name,
+                  Total_units: req.body.Total_units,
+                  Total_size: req.body.Total_size,
+                  Available_units: req.body.Total_units,
+                  Percent_sold: req.body.Percent_sold,
+                  Land_unit_value: req.body.Land_unit_value,
+                  Cost_unit_value: req.body.Cost_unit_value,
+                  City: req.body.City,
+
+                })
+                  buy
+                    .save()
+                    .catch(err => {
+                        console.log(err);
+                        res.status(501).json({
+                          error: err
+                        });
+                      });
+                console.log(buy);
                 res.status(201).json({
                   message: "Added new land successfully",
                   createdland: {
@@ -98,7 +130,7 @@ exports.Lands_create_newland = (req, res, next) => {
               })
               .catch(err => {
                   console.log(err);
-                  res.status(500).json({
+                  res.status(502).json({
                     error: err
                   });
                 });

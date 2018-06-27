@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const landSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     Email: { type: String, required: true },
+    Owner_name: { type: String,required: true},
+    Phone_number: { type: Number,required: true },
+    Aadhar: { type: Number },
     Latitude: { type: Number },
     Longitude: { type: Number},
     State: { type: String },
@@ -12,17 +15,18 @@ const landSchema = mongoose.Schema({
     Village: { type: String },
     City: { type: String,required:true},
     Survey_number: { type: String },
-    Total_size: { type: Number},
+    Total_size: { type: Number,required: true},
     width: { type: Number },
     length: { type: Number},
-    Owner_name: { type: String,required: true},
-    Phone_number: { type: Number,required: true },
-    Aadhar: { type: Number },
-    Land_value: { type: Number, required: true },
     Total_units: { type: Number, required: true},
+    Percent_sold: { type: Number, required: true },
+    Land_unit_value: { type: Number, required: true },
+    Cost_unit_value: { type: Number, required: true },
     Available_units: { type: Number, required: true},
     LandImage: { type: String, required: true },
     SurveyImage: { type: String},
+    AaadharImage: { type: String},
+    PanImage: { type: String},
     Land_status: { type: Boolean}
 
 });
