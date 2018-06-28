@@ -5,10 +5,14 @@ const Land = require("../models/land");
 
 exports.buy_get_all = (req, res, next) => {
   Buy.find()
+     .sort({LandId:-1})
     // .select("product quantity _id")
     // .populate("product", "name")
     .exec()
     .then(docs => {
+      for(var val of docs) {
+          console.log(val.LandId)
+}
       res.status(200).json(docs
       //   {
       //   count: docs.length,

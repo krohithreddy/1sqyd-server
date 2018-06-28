@@ -51,7 +51,7 @@ exports.orders_create_order = (req, res, next) => {
       }
       Land.update({ $and: [ {_id:req.body.LandId}, {Email:req.body.Owner_email} ] },{$set:{Available_units: land.Available_units-req.body.Quantity}})
       .exec()
-      
+
       Buy.update({ $and: [ {LandId:req.body.LandId}, {Email:req.body.Owner_email} ] },{$set:{Available_units: land.Available_units-req.body.Quantity}})
       .exec()
 
@@ -161,22 +161,24 @@ exports.orders_create_trade_order = (req, res, next) => {
     });
 };
 exports.orders_get_order = (req, res, next) => {
-  Order.findById(req.params.orderId)
-    .populate("product")
+  Order.find({ Email: req.params.email })
+  //  .populate("product")
     .exec()
-    .then(order => {
-      if (!order) {
+    .then(docs => {
+      if (!docs) {
         return res.status(404).json({
           message: "Order not found"
         });
       }
-      res.status(200).json({
-        order: order,
-        request: {
-          type: "GET",
-          url: "http://localhost:3000/orders"
-        }
-      });
+      res.status(200).json(docs
+    );
+      // res.status(200).json({
+      //   order: order,
+      //   request: {
+      //     type: "GET",
+      //     url: "http://localhost:3000/orders"
+      //   }
+      // });
     })
     .catch(err => {
       res.status(500).json({

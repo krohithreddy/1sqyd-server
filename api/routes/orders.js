@@ -11,7 +11,7 @@ router.post("/", checkAuth, OrdersController.orders_create_order);
 
 router.post("/trade", checkAuth, OrdersController.orders_create_trade_order);
 
-router.get("/:orderId", checkAuth, OrdersController.orders_get_order);
+router.get("/:email", checkAuth, OrdersController.orders_get_order);
 
 router.delete("/:orderId", checkAuth, OrdersController.orders_delete_order);
 
