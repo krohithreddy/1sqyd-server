@@ -33,5 +33,7 @@ const upload = multer({
 
 router.post("/", checkAuth, upload.any(), LandsController.Lands_create_newland);
 router.get("/", checkAuth,LandsController.Lands_get_all);
+router.get("/:email", checkAuth, LandsController.Lands_get_userlands);
+
 
 module.exports = router;

@@ -4,7 +4,7 @@ const Buy = require("../models/buy");
 const Land = require("../models/land");
 
 exports.buy_get_all = (req, res, next) => {
-  Buy.find()
+  Buy.find( { Available_units: { $ne: 0 } } )
      .sort({LandId:-1})
     // .select("product quantity _id")
     // .populate("product", "name")

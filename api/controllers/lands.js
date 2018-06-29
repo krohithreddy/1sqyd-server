@@ -29,6 +29,34 @@ exports.Lands_get_all = (req, res, next) => {
     });
 };
 
+exports.Lands_get_userlands = (req, res, next) => {
+  Land.find({ Email: req.params.email })
+  //  .populate("product")
+    .exec()
+    .then(docs => {
+      if (!docs) {
+        return res.status(404).json({
+          message: "Order not found"
+        });
+      }
+      res.status(200).json(docs
+    );
+      // res.status(200).json({
+      //   order: order,
+      //   request: {
+      //     type: "GET",
+      //     url: "http://localhost:3000/orders"
+      //   }
+      // });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+};
+
+
 exports.Lands_create_newland = (req, res, next) => {
   User.find({ Email: req.body.Email })
     .exec()

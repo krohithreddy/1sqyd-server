@@ -44,7 +44,7 @@ exports.orders_create_order = (req, res, next) => {
           message: "land not found"
         });
       }
-      else if ((land.Available_units-req.body.Quantity)<0) {
+      else if ((land.Available_units-req.body.Quantity)<=-1) {
         return res.status(404).json({
           message: "land units out of bound"
         });
